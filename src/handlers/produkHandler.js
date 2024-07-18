@@ -10,7 +10,8 @@ export const create_produk = async (request, h) => {
     throw Boom.badRequest('Gagal menambahkan produk. nama tidak boleh kosong');
   }
   const file = request.payload.image;
-  const filename = file.hapi.filename;
+  var filename = file.hapi.filename;
+  filename = filename.replace(/\s+/g, '_');
   const data = file._data;
   await new Promise((resolve, reject) => {
     fs.writeFile('./public/produk/' + filename, data, (err) => {
@@ -96,7 +97,8 @@ export const update_produk = async (request, h) => {
 
   if (request.payload.image) {
     const file = request.payload.image;
-    const filename = file.hapi.filename;
+    var filename = file.hapi.filename;
+    filename = filename.replace(/\s+/g, '_');
     const data = file._data;
     image = filename;
     await new Promise((resolve, reject) => {
