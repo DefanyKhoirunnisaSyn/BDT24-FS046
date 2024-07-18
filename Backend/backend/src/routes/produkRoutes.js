@@ -13,9 +13,28 @@ export const produkRoutes = [
     path: '/api/produk',
     options: {
       pre: [{ method: protect }],
+      payload: {
+        output: 'stream',
+        allow: 'multipart/form-data',
+        maxBytes: 1024 * 1024 * 10, // Maksimal 10 MB
+        parse: true,
+        multipart: true,
+      },
       handler: create_produk,
     },
   },
+  {
+    method: 'GET',
+    path: '/produk/{param*}',
+    handler: {
+      directory: {
+        path: '././public/produk',
+        redirectToSlash: true,
+        index: false,
+      },
+    },
+  },
+
   {
     method: 'GET',
     path: '/api/produk',
@@ -37,6 +56,13 @@ export const produkRoutes = [
     path: '/api/produk/{id}',
     options: {
       pre: [{ method: protect }],
+      payload: {
+        output: 'stream',
+        allow: 'multipart/form-data',
+        maxBytes: 1024 * 1024 * 10, // Maksimal 10 MB
+        parse: true,
+        multipart: true,
+      },
       handler: update_produk,
     },
   },

@@ -1,6 +1,6 @@
 import Hapi from '@hapi/hapi';
 import { produkRoutes } from './routes/produkRoutes.js';
-import hapiMongo from 'hapi-mongodb';
+import Inert from '@hapi/inert';
 import mongoose from 'mongoose';
 import { notFound, errorHandler } from './middleware/error.js';
 import { userRoutes } from './routes/userRoutes.js';
@@ -10,6 +10,8 @@ const init = async () => {
     port: 5000,
     host: 'localhost',
   });
+
+  await server.register(Inert);
 
   try {
     await mongoose.connect(

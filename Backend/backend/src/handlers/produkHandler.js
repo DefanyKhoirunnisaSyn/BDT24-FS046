@@ -1,23 +1,35 @@
 import Boom from '@hapi/boom';
 import produks from '../model/produk.js';
+import fs from 'fs';
+import path from 'path';
 
 export const create_produk = async (request, h) => {
-  const { nama, harga, link, stok, image, jenis } = request.payload;
-
+  console.log('tes');
+  const { nama, harga, link, stok, jenis } = request.payload;
   if (!nama) {
     throw Boom.badRequest('Gagal menambahkan produk. nama tidak boleh kosong');
   }
+  const file = request.payload.image;
+  const filename = file.hapi.filename;
+  const data = file._data;
+  await new Promise((resolve, reject) => {
+    fs.writeFile('./public/produk/' + filename, data, (err) => {
+      if (err) {
+        reject(err);
+      }
+      resolve({ message: 'Upload successfully!' });
+    });
+  });
 
   const newProduk = {
     nama,
     harga,
     link,
     stok,
-    image,
+    image: filename,
     jenis,
   };
 
-  console.log(newProduk);
   const produk = await produks.create(newProduk);
   return h
     .response({
@@ -30,10 +42,23 @@ export const create_produk = async (request, h) => {
 
 export const get_produk = async (request, h) => {
   const produk = await produks.find({});
+
+  const modifiedProdukList = produk.map((p) => {
+    const fotoUrl = `${request.server.info.uri}/produk/${path.basename(
+      p.image
+    )}`;
+    return {
+      ...p.toObject(),
+      image: fotoUrl, // Ganti path file dengan URL foto
+    };
+  });
+
+  console.log(modifiedProdukList);
+
   return h
     .response({
       status: 'success',
-      data: produk,
+      data: modifiedProdukList,
     })
     .code(200);
 };
@@ -43,13 +68,16 @@ export const get_produk_by_id = async (request, h) => {
   // console.log('ID:', id);
 
   const produk = await produks.findOne({ _id: id });
+  const fotoUrl = `${request.server.info.uri}/produk/${path.basename(
+    produk.image
+  )}`;
 
   // console.log(produk);
   if (produk) {
     return h
       .response({
         status: 'success',
-        data: { produk },
+        data: { produk, image: fotoUrl },
       })
       .code(200);
   }
@@ -58,8 +86,28 @@ export const get_produk_by_id = async (request, h) => {
 };
 
 export const update_produk = async (request, h) => {
-  const { nama, harga, link, stok, image, jenis } = request.payload;
+  var { nama, harga, link, stok, image, jenis } = request.payload;
   const { id } = request.params;
+
+  // const requiredFields = ['nama', 'harga', 'link', 'stok', , 'jenis'];
+  // if (requiredFields.every((field) => !updateFields[field])) {
+  //   throw Boom.badRequest('Gagal update produk. tidak ada yang terisi');
+  // }
+
+  if (request.payload.image) {
+    const file = request.payload.image;
+    const filename = file.hapi.filename;
+    const data = file._data;
+    image = filename;
+    await new Promise((resolve, reject) => {
+      fs.writeFile('./public/produk/' + filename, data, (err) => {
+        if (err) {
+          reject(err);
+        }
+        resolve({ message: 'Upload successfully!' });
+      });
+    });
+  }
 
   const updateFields = {
     nama,
@@ -69,11 +117,6 @@ export const update_produk = async (request, h) => {
     image,
     jenis,
   };
-
-  const requiredFields = ['nama', 'harga', 'link', 'stok', 'image', 'jenis'];
-  if (requiredFields.every((field) => !updateFields[field])) {
-    throw Boom.badRequest('Gagal update produk. tidak ada yang terisi');
-  }
 
   const produk = await produks.findOneAndUpdate(
     { _id: id },
