@@ -39,7 +39,6 @@ export const produkRoutes = [
     method: 'GET',
     path: '/api/produk',
     options: {
-      pre: [{ method: protect }],
       handler: get_produk,
     },
   },
@@ -47,7 +46,6 @@ export const produkRoutes = [
     method: 'GET',
     path: '/api/produk/{id}',
     options: {
-      pre: [{ method: protect }],
       handler: get_produk_by_id,
     },
   },
