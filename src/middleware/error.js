@@ -15,13 +15,13 @@ const notFound = (request, h) => {
 };
 
 const errorHandler = (request, h) => {
-  const response = request.response;
+  var response = request.response;
 
   if (!response.isBoom) {
     return h.continue;
   }
 
-  const statusCode = response.output.statusCode;
+  var statusCode = response.output.statusCode;
   let message = response.message;
 
   if (response.name === 'CastError' && response.kind === 'ObjectId') {
@@ -29,7 +29,7 @@ const errorHandler = (request, h) => {
     message = 'Resource not found';
   }
 
-  const status = statusCode === 500 ? 'Error' : 'Fail';
+  var status = statusCode === 500 ? 'Error' : 'Fail';
 
   const errorResponse = h
     .response({

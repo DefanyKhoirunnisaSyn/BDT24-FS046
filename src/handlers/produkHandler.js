@@ -64,10 +64,10 @@ export const get_produk = async (request, h) => {
 };
 
 export const get_produk_by_id = async (request, h) => {
-  const { id } = request.params;
+  var { id } = request.params;
   // console.log('ID:', id);
 
-  const produk = await produks.findOne({ _id: id });
+  var produk = await produks.findOne({ _id: id });
 
   if (produk) {
     return h
