@@ -81,6 +81,24 @@ export const get_produk_by_id = async (request, h) => {
   throw Boom.notFound('Id tidak ditemukan');
 };
 
+export const get_produk_by_jenis = async (request, h) => {
+  const { jenis } = request.params;
+  // console.log('ID:', id);
+
+  const produk = await produks.find({ "jenis": jenis });
+
+  if (produk) {
+    return h
+      .response({
+        status: 'success',
+        data: { produk },
+      })
+      .code(200);
+  }
+
+  throw Boom.notFound('Id tidak ditemukan');
+};
+
 export const update_produk = async (request, h) => {
   var { nama, harga, link, stok, image, jenis } = request.payload;
   const { id } = request.params;

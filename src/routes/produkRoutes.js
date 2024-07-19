@@ -4,6 +4,7 @@ import {
   get_produk_by_id,
   update_produk,
   delete_produk_by_id,
+  get_produk_by_jenis
 } from '../handlers/produkHandler.js';
 import { protect } from '../middleware/auth.js';
 
@@ -47,6 +48,13 @@ export const produkRoutes = [
     path: '/api/produk/{id}',
     options: {
       handler: get_produk_by_id,
+    },
+  },
+  {
+    method: 'GET',
+    path: '/api/produk/jenis/{jenis}',
+    options: {
+      handler: get_produk_by_jenis,
     },
   },
   {
