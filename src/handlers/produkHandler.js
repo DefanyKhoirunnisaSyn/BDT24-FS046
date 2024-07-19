@@ -44,16 +44,16 @@ export const get_produk = async (request, h) => {
   const produk = await produks.find({});
 
   const modifiedProdukList = produk.map((p) => {
-    // const fotoUrl = `${request.server.info.uri}/produk/${path.basename(
-    //   p.image
-    // )}`;
+    const fotoUrl = `${request.server.info.uri}/produk/${path.basename(
+      p.image
+    )}`;
     return {
       ...p.toObject(),
       image: p.image, // Ganti path file dengan URL foto
     };
   });
 
-  console.log(modifiedProdukList);
+  // console.log(modifiedProdukList);
 
   return h
     .response({
@@ -68,11 +68,7 @@ export const get_produk_by_id = async (request, h) => {
   // console.log('ID:', id);
 
   const produk = await produks.findOne({ _id: id });
-  const fotoUrl = `${request.server.info.uri}/produk/${path.basename(
-    produk.image
-  )}`;
 
-  // console.log(produk);
   if (produk) {
     return h
       .response({
