@@ -4,7 +4,6 @@ import fs from 'fs';
 import path from 'path';
 
 export const create_produk = async (request, h) => {
-  console.log('tes');
   const { nama, harga, link, stok, jenis } = request.payload;
   if (!nama) {
     throw Boom.badRequest('Gagal menambahkan produk. nama tidak boleh kosong');
@@ -45,12 +44,12 @@ export const get_produk = async (request, h) => {
   const produk = await produks.find({});
 
   const modifiedProdukList = produk.map((p) => {
-    const fotoUrl = `${request.server.info.uri}/produk/${path.basename(
-      p.image
-    )}`;
+    // const fotoUrl = `${request.server.info.uri}/produk/${path.basename(
+    //   p.image
+    // )}`;
     return {
       ...p.toObject(),
-      image: fotoUrl, // Ganti path file dengan URL foto
+      image: p.image, // Ganti path file dengan URL foto
     };
   });
 
@@ -78,7 +77,7 @@ export const get_produk_by_id = async (request, h) => {
     return h
       .response({
         status: 'success',
-        data: { produk, image: fotoUrl },
+        data: { produk },
       })
       .code(200);
   }
