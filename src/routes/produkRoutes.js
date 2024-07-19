@@ -25,7 +25,7 @@ export const produkRoutes = [
   },
   {
     method: 'GET',
-    path: '/produk/{param*}',
+    path: '/produk/image/{param*}',
     handler: {
       directory: {
         path: '././public/produk',
